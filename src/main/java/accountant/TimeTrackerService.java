@@ -1,7 +1,6 @@
 package accountant;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import model.Report;
 import org.apache.commons.io.IOUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;

@@ -12,46 +12,6 @@ public class CommandService {
         return userService;
     }
 
-
-    public static List<User> getUSERS() {
-        return getService().findAll();
-    }
-
-    public static List<String> getAllUsers() {
-        List<User> users = getService().findAll();
-        List<String> stringUsers = new ArrayList<>();
-        for (User u : users) {
-            stringUsers.add(
-                    u.getId() + "|"
-                            + u.getUsername() + "|"
-                            + u.getFirstName() + "|"
-                            + u.getLastName() + "|"
-                            + u.getRole() + "|"
-                            + u.getGroup()
-            );
-        }
-
-        return stringUsers;
-    }
-
-
-    public static List<String> getUsersByGroup(String group) {
-        List<User> users = getService().findByGroup(group);
-        List<String> stringUsers = new ArrayList<>();
-        for (User u : users) {
-            stringUsers.add(
-                    u.getId() + "|"
-                            + u.getUsername() + "|"
-                            + u.getFirstName() + "|"
-                            + u.getLastName() + "|"
-                            + u.getRole() + "|"
-                            + u.getGroup()
-            );
-        }
-
-        return stringUsers;
-    }
-
     public static List<String> getUsersByRoleAndGroup(String role, String group) {
         List<User> users = getService().findByRoleAndGroup(role, group);
         List<String> stringUsers = new ArrayList<>();
@@ -73,7 +33,7 @@ public class CommandService {
         List<User> users = getService().findAll();
         List<String> stringUsers = new ArrayList<>();
         for (User u : users) {
-            if (u.getRole().equals("user") || u.getRole().equals("lead")) {
+            if (u.getRole().equals("user")) {
                 stringUsers.add(
                         String.valueOf(u.getId())
                 );
@@ -82,52 +42,6 @@ public class CommandService {
 
         return stringUsers;
     }
-
-    public static List<String> getLeadUserByGroupName(String group) {
-        List<User> users = getService().findAll();
-        List<String> stringUsers = new ArrayList<>();
-        for (User u : users) {
-            if (u.getGroup().equals(group) & u.getRole().equals("lead")) {
-                stringUsers.add(
-                        u.getId() + "|"
-                                + u.getUsername() + "|"
-                                + u.getFirstName() + "|"
-                                + u.getLastName() + "|"
-                                + u.getRole() + "|"
-                                + u.getGroup()
-                );
-            }
-        }
-
-        return stringUsers;
-    }
-
-    public static List<String> getLeadIdByGroupName(String group) {
-        List<User> users = getService().findAll();
-        List<String> stringUsers = new ArrayList<>();
-        for (User u : users) {
-            if (u.getGroup().equals(group) & u.getRole().equals("lead")) {
-                stringUsers.add(
-                        String.valueOf(u.getId())
-                );
-            }
-        }
-
-        return stringUsers;
-    }
-
-    public static String getUserById(String userId){
-        User user = getService().findById(userId);
-        String stringUser=user.getId() + "|"
-                + user.getUsername() + "|"
-                + user.getFirstName() + "|"
-                + user.getLastName() + "|"
-                + user.getRole() + "|"
-                + user.getGroup();
-
-        return stringUser;
-    }
-
 
     public static String getLeadByIdGroup(String userId) {
         User user = getService().findById(userId);
@@ -137,9 +51,9 @@ public class CommandService {
             System.out.println("There is no lead for this group");
             return "";
         }
-            String s = list.get(0);
-            String[] split = getFieldsFromString(s);
-            return split[0];
+        String s = list.get(0);
+        String[] split = getFieldsFromString(s);
+        return split[0];
     }
 
     public static String getFirstNameById(String userId) {
@@ -160,7 +74,8 @@ public class CommandService {
         return stringUser;
     }
 
-    public static String[] getFieldsFromString(String ingoing){
+
+    public static String[] getFieldsFromString(String ingoing) {
         String[] result = ingoing.split("\\|");
         return result;
     }

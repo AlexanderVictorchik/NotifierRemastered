@@ -1,4 +1,4 @@
-package model;
+package accountant;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

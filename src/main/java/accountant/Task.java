@@ -1,4 +1,5 @@
-package model;
+package accountant;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,6 @@ public class Task {
     int timeSpended;
     String description;
     int reportId;
-
 
 
     @Override

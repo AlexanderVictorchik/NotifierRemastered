@@ -2,27 +2,28 @@ package sendnotification;
 
 import command.CommandService;
 import comparator.CompareService;
-import model.Report;
+import accountant.Report;
 import sender.SenderService;
 import accountant.TimeTrackerService;
 import command.User;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Notifier {
 
     public static void main(String[] args) throws IOException {
-      /*  LocalTime sendTime = LocalTime.of(22, 32, 00);
+        LocalTime sendTime = LocalTime.of(19, 00, 00);
 
         while (true) {
             if (LocalTime.now().equals(sendTime)) {
-                sendReport();
+                sendNotification();
             }
-        }*/
-        sendNotification();
+        }
+
     }
 
     private static void sendNotification() throws IOException {
@@ -34,26 +35,15 @@ public class Notifier {
             convertReport.add(String.valueOf(r.getUserId()));
         }
         List<String> differenceIdList = CompareService.compare(convertReport, comm);
-        System.out.println(differenceIdList);
-        System.out.println(differenceIdList.get(0));
-        System.out.println(CommandService.getGroupById(differenceIdList.get(0)));
-        System.out.println(CommandService.getFirstNameById(differenceIdList.get(0)));
-        System.out.println(CommandService.getLastNameById(differenceIdList.get(0)));
-        System.out.println(CommandService.getLeadByIdGroup(differenceIdList.get(0)));
-        for (String s : differenceIdList) {
-            msg.append("On date " + LocalDate.now() + "\n");
-            msg.append("User with ID " + s + "\n");
-            msg.append("Name : " + CommandService.getFirstNameById(s) + " " + CommandService.getLastNameById(s) + "\n");
-            msg.append("from " + CommandService.getGroupById(s) + " team" + "\n");
-            msg.append("didn't send the report" + "\n");
-            msg.append("==============================" + "\n");
-            String leadId = CommandService.getLeadByIdGroup(s);
-            if (leadId.length() != 0) {
-                SenderService.send(Long.valueOf(leadId), String.valueOf(msg));
-            }
+        for (int i = 0; i < differenceIdList.size(); i++) {
+            SenderService.send(Long.valueOf(CommandService.getLeadByIdGroup(differenceIdList.get(i))),
+                    "User with ID " + differenceIdList.get(i) + "\n" +
+                            "Name : " + CommandService.getFirstNameById(differenceIdList.get(i)) + " "
+                            + CommandService.getLastNameById(differenceIdList.get(i)) + "\n" +
+                            "from " + CommandService.getGroupById(differenceIdList.get(i)) + " team" + "\n" +
+                            "didn't send the report" + "\n" +
+                            "on date " + LocalDate.now() + "\n" +
+                            "==============================" + "\n");
         }
     }
 }
-
-
-
