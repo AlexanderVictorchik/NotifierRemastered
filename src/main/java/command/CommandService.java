@@ -17,11 +17,6 @@ public class CommandService {
         return getService().findAll();
     }
 
-    public static String getUsernameById() {
-        List<User> users = getService().findAll();
-
-    }
-
     public static List<String> getAllUsers() {
         List<User> users = getService().findAll();
         List<String> stringUsers = new ArrayList<>();
@@ -57,17 +52,6 @@ public class CommandService {
         return stringUsers;
     }
 
-    public static List<String> getUsersByRole(String role) {
-        List<User> users = getService().findByRole(role);
-        List<String> stringUsers = new ArrayList<>();
-        for (User u : users) {
-            stringUsers.add(
-                    u.getId() + "|");
-        }
-
-        return stringUsers;
-    }
-
     public static List<String> getUsersByRoleAndGroup(String role, String group) {
         List<User> users = getService().findByRoleAndGroup(role, group);
         List<String> stringUsers = new ArrayList<>();
@@ -92,39 +76,6 @@ public class CommandService {
             if (u.getRole().equals("user") || u.getRole().equals("lead")) {
                 stringUsers.add(
                         String.valueOf(u.getId())
-                );
-            }
-        }
-
-        return stringUsers;
-    }
-
-    public static List<String> getUsersForLeadIds() {
-        List<User> users = getService().findAll();
-        List<String> stringUsers = new ArrayList<>();
-        for (User u : users) {
-            if (u.getRole().equals("user")) {
-                stringUsers.add(
-                        String.valueOf(u.getId())
-                );
-            }
-        }
-
-        return stringUsers;
-    }
-
-    public static List<String> getUsersForLeadFull() {
-        List<User> users = getService().findAll();
-        List<String> stringUsers = new ArrayList<>();
-        for (User u : users) {
-            if (u.getRole().equals("user")) {
-                stringUsers.add(
-                        u.getId() + "|"
-                                + u.getUsername() + "|"
-                                + u.getFirstName() + "|"
-                                + u.getLastName() + "|"
-                                + u.getRole() + "|"
-                                + u.getGroup()
                 );
             }
         }
@@ -178,13 +129,35 @@ public class CommandService {
     }
 
 
-    public static String getLeadByIdGroup(String userId){
+    public static String getLeadByIdGroup(String userId) {
         User user = getService().findById(userId);
-        String stringUser= user.getGroup();
-   List<String> list = getUsersByRoleAndGroup("lead", stringUser);
-   String s = list.get(0);
-   String [] split = getFieldsFromString(s);
-        return split[0];
+        String stringUser = user.getGroup();
+        List<String> list = getUsersByRoleAndGroup("lead", stringUser);
+        if (list.isEmpty()) {
+            System.out.println("There is no lead for this group");
+            return "";
+        }
+            String s = list.get(0);
+            String[] split = getFieldsFromString(s);
+            return split[0];
+    }
+
+    public static String getFirstNameById(String userId) {
+        User user = getService().findById(userId);
+        String stringUser = user.getFirstName();
+        return stringUser;
+    }
+
+    public static String getLastNameById(String userId) {
+        User user = getService().findById(userId);
+        String stringUser = user.getLastName();
+        return stringUser;
+    }
+
+    public static String getGroupById(String userId) {
+        User user = getService().findById(userId);
+        String stringUser = user.getGroup();
+        return stringUser;
     }
 
     public static String[] getFieldsFromString(String ingoing){

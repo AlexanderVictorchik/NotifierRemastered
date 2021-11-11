@@ -4,19 +4,17 @@ import command.CommandService;
 import comparator.CompareService;
 import model.Report;
 import sender.SenderService;
-import tracker.TimeTrackerService;
+import accountant.TimeTrackerService;
 import command.User;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-
-import static command.CommandService.getFieldsFromString;
 
 public class Notifier {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
       /*  LocalTime sendTime = LocalTime.of(22, 32, 00);
 
         while (true) {
@@ -25,72 +23,37 @@ public class Notifier {
             }
         }*/
         sendNotification();
-
     }
 
-    private static void sendNotification() {
-        List<String> allUsers = CommandService.getAllUsers();
-//        System.out.println(allUsers);
-//        String [] x = getFieldsFromString(allUsers.get(0));
-//        System.out.println(x[0]);
-//        System.out.println(x[1]);
-//        System.out.println(x[2]);
-//        System.out.println(x[3]);
-//        System.out.println(x[4]);
-//        System.out.println(x[5]);
-        List<User> USERS = CommandService.getUSERS();
-        System.out.println(USERS);
-
-        List<String> comm = CommandService.getUsersForLeadIds();
-        List<Report> acc = TimeTrackerService.trackUsersId();
+    private static void sendNotification() throws IOException {
+        StringBuilder msg = new StringBuilder();
+        List<String> comm = CommandService.getNotAdminUsers();
+        List<Report> acc = TimeTrackerService.getTimingReport();
         List<String> convertReport = new ArrayList<>();
-        for (Report r: acc) {
+        for (Report r : acc) {
             convertReport.add(String.valueOf(r.getUserId()));
         }
-
         List<String> differenceIdList = CompareService.compare(convertReport, comm);
-        for (int i = 0; i < differenceIdList.size(); i++) {            ;
-            SenderService.send(Long.valueOf(CommandService.getLeadByIdGroup(differenceIdList.get(i))), "User with ID: " + differenceIdList.get(i) +
-                    " (Name: " + USERS.getName + " " + ")" +
-                    " didnt send the report today!");
-        }
-        System.out.println(CommandService.getLeadByIdGroup("777"));
-
-
+        System.out.println(differenceIdList);
+        System.out.println(differenceIdList.get(0));
+        System.out.println(CommandService.getGroupById(differenceIdList.get(0)));
+        System.out.println(CommandService.getFirstNameById(differenceIdList.get(0)));
+        System.out.println(CommandService.getLastNameById(differenceIdList.get(0)));
+        System.out.println(CommandService.getLeadByIdGroup(differenceIdList.get(0)));
+        for (String s : differenceIdList) {
+            msg.append("On date " + LocalDate.now() + "\n");
+            msg.append("User with ID " + s + "\n");
+            msg.append("Name : " + CommandService.getFirstNameById(s) + " " + CommandService.getLastNameById(s) + "\n");
+            msg.append("from " + CommandService.getGroupById(s) + " team" + "\n");
+            msg.append("didn't send the report" + "\n");
+            msg.append("==============================" + "\n");
+            String leadId = CommandService.getLeadByIdGroup(s);
+            if (leadId.length() != 0) {
+                SenderService.send(Long.valueOf(leadId), String.valueOf(msg));
+            }
         }
     }
-//        for (int i = 0; i < result.size(); i++) {
-//            SenderService.send(430627864l,"User with ID: " + result.get(i) +
-//                    " didnt send the report today!");
-//        }
-//
-
-
-
-
-
-
-//        String textmessage = "User with ID: " + splitter[0] +
-//                " (Name: " + splitter[2] + " " + splitter[3] +
-//                ")" + " didnt send the report today!";
-
-
-
-
-
-
-//        System.out.println(CommandService.getUserById("430627864"));
-//        String usersId = String.valueOf(CommandService.getUsersByRole("user"));
-//        String [] userssplit = getFieldsFromString(usersId);
-//        System.out.println(userssplit[1]);
-//        TimeTrackerService.track()
-//        String [] splitter = getFieldsFromString(alex2);
-//        String textmessage = "User with ID: " + splitter[0] + " (Name: " + splitter[2] + " " + splitter[3] + ")" + " didnt send the report today!";
-//        System.out.println("User with ID: " + splitter[0] +
-//                " (Name: " + splitter[2] + " " + splitter[3] + ")" +
-//                " didnt send the report today!");
-//
-//        SenderService.send(Long.valueOf(splitter[0]),textmessage);
+}
 
 
 
