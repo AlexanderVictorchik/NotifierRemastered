@@ -25,7 +25,6 @@ public class CommandService {
                             + u.getGroup()
             );
         }
-
         return stringUsers;
     }
 
@@ -39,7 +38,6 @@ public class CommandService {
                 );
             }
         }
-
         return stringUsers;
     }
 

@@ -16,7 +16,7 @@ import java.util.List;
 public class Notifier {
 
     public static void main(String[] args) throws IOException {
-        LocalTime sendTime = LocalTime.of(19, 00, 00);
+        LocalTime sendTime = LocalTime.of(19, 30, 00);
 
         while (true) {
             if (LocalTime.now().equals(sendTime)) {
@@ -27,7 +27,6 @@ public class Notifier {
     }
 
     private static void sendNotification() throws IOException {
-        StringBuilder msg = new StringBuilder();
         List<String> comm = CommandService.getNotAdminUsers();
         List<Report> acc = TimeTrackerService.getTimingReport();
         List<String> convertReport = new ArrayList<>();
